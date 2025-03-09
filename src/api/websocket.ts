@@ -4,6 +4,13 @@ import { WEB_SOCKET_BASE_URL } from '@src/constants';
 export const setupSocket = (roomId: string, username: string, onMessageReceived: (message: any) => void) => {
   // Create a WebSocket connection
   const socket = io(`${WEB_SOCKET_BASE_URL}/${roomId}/${username}`);
+  // const socket = io(`${WEB_SOCKET_BASE_URL}/${roomId}/${username}`, {
+  //   transports: ['websocket'], // Force WebSocket connection
+  //   reconnection: true, // Auto-reconnect
+  //   reconnectionAttempts: 5, // Retry connection 5 times before failing
+  //   timeout: 10000, // 10 seconds timeout
+  // });
+
 
   // Handle connection event
   socket.on('connect', () => {
@@ -11,28 +18,28 @@ export const setupSocket = (roomId: string, username: string, onMessageReceived:
   });
 
   // Handle incoming messages
-  socket.on('message', (message) => {
-    onMessageReceived(message);
-  });
+  // socket.on('message', (message) => {
+  //   onMessageReceived(message);
+  // });
 
-  // Handle disconnection event
-  socket.on('disconnect', () => {
-    console.log('Socket disconnected');
-  });
+  // // Handle disconnection event
+  // socket.on('disconnect', () => {
+  //   console.log('Socket disconnected');
+  // });
 
-  // Handle errors
-  socket.on('error', (error) => {
-    console.error('Socket error:', error);
-  });
+  // // Handle errors
+  // socket.on('error', (error) => {
+  //   console.error('Socket error:', error);
+  // });
 
-  // Handle user join/leave events (optional)
-  socket.on('userJoined', (username) => {
-    console.log(`${username} has joined the room`);
-  });
+  // // Handle user join/leave events (optional)
+  // socket.on('userJoined', (username) => {
+  //   console.log(`${username} has joined the room`);
+  // });
 
-  socket.on('userLeft', (username) => {
-    console.log(`${username} has left the room`);
-  });
+  // socket.on('userLeft', (username) => {
+  //   console.log(`${username} has left the room`);
+  // });
 
   return socket;
 };

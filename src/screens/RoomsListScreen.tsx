@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { View, FlatList, Button, Text, Pressable } from 'react-native';
 import { getRooms } from '@src/api/api';
 import { UserContext } from '@src/context/UserContext';
-import { ChatRooms } from '@src/type';
+import { ChatRoom, ChatRooms } from '@src/type';
 import RoomCard from '@src/components/RoomCard';
 import NavigationHeader from '@src/components/NavigationHeader';
 import { AddOutline } from '@src/assets/icons';
@@ -10,7 +10,7 @@ import { AddOutline } from '@src/assets/icons';
 
 const RoomsListScreen = ({ navigation, route }) => {
   const [chatRooms, setChatRooms] = useState<ChatRooms>([]);
-  const { userData } = useContext(UserContext);
+  const { userData, updateRoomInformation } = useContext(UserContext);
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -25,6 +25,11 @@ const RoomsListScreen = ({ navigation, route }) => {
     };
     fetchRooms();
   }, []);
+
+  const onCardPress = (item: ChatRoom) => {
+    updateRoomInformation(item)
+    navigation.navigate('Chat')
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -46,7 +51,7 @@ const RoomsListScreen = ({ navigation, route }) => {
         renderItem={({ item }) => (
           <RoomCard
             roomName={item.name}
-            handlePress={() => navigation.navigate('Chat', { roomId: item.id })}
+            handlePress={() => onCardPress(item)}
           />
         )}
       />

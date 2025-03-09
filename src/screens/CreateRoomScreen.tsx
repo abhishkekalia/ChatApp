@@ -1,39 +1,57 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Alert, StyleSheet, Text } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, TextInput, Button, Alert, StyleSheet, Text, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { createRoom } from '@src/api/api';
+import NavigationHeader from '@src/components/NavigationHeader';
+import Toast from 'react-native-toast-message';
+import { UserContext } from '@src/context/UserContext';
 
 const CreateRoomScreen = ({ navigation }) => {
   const [roomName, setRoomName] = useState('');
+  const { updateRoomInformation } = useContext(UserContext)
 
   const handleCreateRoom = async () => {
     if (!roomName.trim()) {
-      Alert.alert('Error', 'Please enter a room name');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: "Please enter a room name",
+      });
       return;
     }
 
     try {
-      // Call the API to create a new room
-      const roomData = await createRoom(roomName); // Pass room name and user ID
-      console.log('Room created:', roomData);
-
-      // Navigate to the ChatScreen with the new room ID
-      navigation.navigate('Chat', { roomId: roomData.roomId });
+      const roomData: any = await createRoom(roomName); // Pass room name and user 
+      updateRoomInformation(roomData)
+      navigation.navigate('Chat');
     } catch (error) {
-      console.error('Error creating room:', error);
-      Alert.alert('Error', 'Failed to create room. Please try again.');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: "Failed to create room. Please try again.",
+      });
+      console.log('Error creating room:', error);
+      // Alert.alert('Error', 'Failed to create room. Please try again.');
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create a New Room</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter room name"
-        value={roomName}
-        onChangeText={setRoomName}
+    <View style={{ flex: 1 }}>
+      <NavigationHeader
+        title='Create Room'
+        isBackNavigation={true}
       />
-      <Button title="Create Room" onPress={handleCreateRoom} />
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Create a New Room</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter room name"
+            value={roomName}
+            onChangeText={setRoomName}
+          />
+          <Button title="Create Room" onPress={handleCreateRoom} />
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };

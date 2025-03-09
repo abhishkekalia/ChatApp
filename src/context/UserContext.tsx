@@ -1,4 +1,4 @@
-import { RootUser } from '@src/type';
+import { ChatRoom, RootUser } from '@src/type';
 import React, { createContext, useEffect, useState, } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -7,8 +7,12 @@ export const UserContext = createContext<{
   userData: RootUser | null;
   updateUser: (event: RootUser) => void;
   clearUser: () => void;
+  roomInformation: ChatRoom | null;
+  updateRoomInformation: (event: ChatRoom) => void;
 }>({
   userData: null,
+  roomInformation: null,
+  updateRoomInformation: () => { },
   updateUser: () => { },
   clearUser: () => { },
 });
@@ -20,6 +24,7 @@ interface UserProviderProps {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [userData, setUserData] = useState<RootUser | null>(null);
+  const [roomInformation, setRoomInformation] = useState<ChatRoom | null>(null);
 
   useEffect(() => {
     const _retrieveData = async () => {
@@ -41,6 +46,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     setUserData(event);
     await AsyncStorage.setItem('user', JSON.stringify(event));
   };
+  const updateRoomInformation = (event: ChatRoom) => {
+    setRoomInformation(event)
+  }
 
   // Function to clear user data (e.g., on logout)
   const clearUser = () => {
@@ -48,7 +56,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ userData, updateUser, clearUser }}>
+    <UserContext.Provider value={{ userData, roomInformation, updateRoomInformation, updateUser, clearUser }}>
       {children}
     </UserContext.Provider>
   );

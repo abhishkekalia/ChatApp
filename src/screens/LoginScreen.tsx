@@ -1,7 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { View, TextInput, Button, Alert } from 'react-native';
+import { View, TextInput, Button, Alert, Text } from 'react-native';
 import { setUsername } from '@src/api/api';
 import { UserContext } from '@src/context/UserContext';
+import NavigationHeader from '@src/components/NavigationHeader';
 
 
 const LoginScreen = ({ navigation }) => {
@@ -27,9 +28,26 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View>
-      <TextInput placeholder="Enter username" value={username} onChangeText={setUsernameInput} />
-      <Button title="Login" onPress={handleLogin} />
+    <View style={{ flex: 1 }}>
+      <NavigationHeader
+        title='Login'
+      />
+      <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 16 }}>
+
+
+        <View style={{ gap: 8 }}>
+          <Text>Username</Text>
+          <TextInput
+            placeholder="Enter username"
+            value={username}
+            onChangeText={setUsernameInput}
+            placeholderTextColor={"#000"}
+            style={{ height: 44, borderWidth: 1, borderColor: '#ccc', padding: 8, marginBottom: 8, borderRadius: 22, color: '#000', paddingHorizontal: 16 }}
+
+          />
+        </View>
+        <Button title="Login" onPress={handleLogin} />
+      </View>
     </View>
   );
 };

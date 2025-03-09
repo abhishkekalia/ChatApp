@@ -31,7 +31,7 @@ api.interceptors.request.use((config: AxiosRequestConfig): Promise<AxiosRequestC
 
 api.interceptors.response.use(
   (response: AxiosResponse) => {
-    // console.log('AXIOS_RESPONSE', JSON.stringify(response));
+    console.log('AXIOS_RESPONSE', JSON.stringify(response));
     return response;
   },
   async (error: AxiosError<ApiErrorResponse>) => {
@@ -68,7 +68,7 @@ export const getRooms = async (): Promise<any> => {
 export const createRoom = async (roomName: string): Promise<string> => {
   try {
     const response = await api.post(`${API_BASE_URL}/chat/rooms`, { name: roomName });
-    return response.data.roomId;
+    return response.data;
   } catch (error) {
     console.error('Error creating room:', error);
     throw error;
